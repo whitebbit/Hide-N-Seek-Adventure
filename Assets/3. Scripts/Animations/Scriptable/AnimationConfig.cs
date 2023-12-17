@@ -1,14 +1,25 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace _3._Scripts.Animations.Scriptable
 {
-    [CreateAssetMenu(menuName = "Configs/Animations/Animations", fileName = "AnimationConfig")]
-    public class AnimationConfig: ScriptableObject
+    public abstract class AnimationConfig: ScriptableObject
     {
-        [SerializeField] private string speedParameter;
+        protected abstract IEnumerable<string> Parameters();
+        
+        public int GetID(string id)
+        {
+            var obj = Parameters().FirstOrDefault(o => o == id);
 
-        public int SpeedParameter => Animator.StringToHash(speedParameter);
+            if (obj == null)
+            {
+                throw new System.ArgumentException($"'{id}' not found on parameters");
+            }
+            
+            return Animator.StringToHash(obj);
+        }
     }
 }

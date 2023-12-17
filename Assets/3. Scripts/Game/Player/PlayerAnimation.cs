@@ -3,40 +3,40 @@ using UnityEngine;
 
 namespace _3._Scripts.Game
 {
-    [RequireComponent(typeof(PlayerBase))]
+    [RequireComponent(typeof(Player))]
     public class PlayerAnimation : MonoBehaviour
     {
         [SerializeField] private Animator animator;
-        private PlayerBase _playerBase;
+        private Player _player;
         private float _tempSpeed;
         private void Awake()
         {
-            _playerBase = GetComponent<PlayerBase>();
-            _playerBase.SetAnimatable(new ClassicAnimation(animator));
+            _player = GetComponent<Player>();
+            _player.SetAnimatable(new ClassicAnimation(animator));
         }
 
         private void Start()
         {
-            _playerBase.Movable.Moved += Move;
-            _playerBase.Movable.Stopped += Stop;
+            _player.Movable.Moved += Move;
+            _player.Movable.Stopped += Stop;
         }
 
         private void OnDisable()
         {
-            _playerBase.Movable.Moved -= Move;
-            _playerBase.Movable.Stopped -= Stop;
+            _player.Movable.Moved -= Move;
+            _player.Movable.Stopped -= Stop;
         }
 
         private void Move(Vector3 direction)
         {
             _tempSpeed = direction.magnitude;
-            _playerBase.Animatable.SetFloat(_playerBase.AnimationConfig.SpeedParameter, _tempSpeed);
+            _player.Animatable.SetFloat(_player.AnimationConfig.GetID("Speed"), _tempSpeed);
         }
 
         private void Stop()
         {
-            _tempSpeed -= Time.deltaTime * (_playerBase.MovementConfig.MoveSpeed * .75f);
-            _playerBase.Animatable.SetFloat(_playerBase.AnimationConfig.SpeedParameter, _tempSpeed);
+            _tempSpeed -= Time.deltaTime * (_player.MovementConfig.MoveSpeed * .75f);
+            _player.Animatable.SetFloat(_player.AnimationConfig.GetID("Speed"), _tempSpeed);
         }
     }
 }

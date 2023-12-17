@@ -6,45 +6,45 @@ using UnityEngine;
 
 namespace _3._Scripts.Game
 {
-    [RequireComponent(typeof(PlayerBase))]
+    [RequireComponent(typeof(Player))]
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private Transform rotateObject;
         [Space] [SerializeField] private Joystick joystick;
         
         private Rigidbody _rigidbody;
-        private PlayerBase _playerBase;
+        private Player _player;
 
         private void Awake()
         {
-            _playerBase = GetComponent<PlayerBase>();
+            _player = GetComponent<Player>();
             _rigidbody = GetComponent<Rigidbody>();
 
-            _playerBase.SetMovable(new JoystickMovable(joystick));
+            _player.SetMovable(new JoystickMovable(joystick));
         }
 
         private void Start()
         {
-            _playerBase.Movable.Moved += Move;
-            _playerBase.Movable.Stopped += Stop;
+            _player.Movable.Moved += Move;
+            _player.Movable.Stopped += Stop;
         }
 
         private void Update()
         {
-            _playerBase.Movable.Move();
+            _player.Movable.Move();
         }
 
 
         private void OnDisable()
         {
-            _playerBase.Movable.Moved -= Move;
-            _playerBase.Movable.Stopped -= Stop;
+            _player.Movable.Moved -= Move;
+            _player.Movable.Stopped -= Stop;
         }
 
         private void Move(Vector3 direction)
         {
             rotateObject.LookAt(rotateObject.position + direction);
-            _rigidbody.velocity = direction * _playerBase.MovementConfig.MoveSpeed;
+            _rigidbody.velocity = direction * _player.MovementConfig.MoveSpeed;
         }
 
         private void Stop()
